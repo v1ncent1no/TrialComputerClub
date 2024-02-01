@@ -36,12 +36,14 @@ enum TokenType {
     tok_number,
     tok_string,
     tok_space,
+    tok_newline,
     tok_colon,
+    tok_eof,
 };
 
 struct Token {
     TokenType type;
-    std::optional<std::string_view> lexem;
+    std::optional<std::string_view> lexem{};
 };
 
 struct TokenizerMetadata {
@@ -52,6 +54,8 @@ struct TokenizerMetadata {
 class Tokenizer {
     const char *source;
     TokenizerMetadata metadata; // TODO: use metadata for gracefull error outout
+
+    auto read_chunk(Token &token, bool (*condition)(char ch)) -> void;
 
 public:
     Tokenizer(const char *source)
