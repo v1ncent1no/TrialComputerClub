@@ -38,9 +38,11 @@ struct TimePointWrongFormat : public std::runtime_error {
     TimePointWrongFormat(const std::string &msg) : std::runtime_error(msg) {}
 };
 
+// created my own time point class to simplify the logic, otherwise, using
+// `<chrono>` types would loook messy
 class TimePoint {
     size_t hours, minutes;
-    size_t raw_minutes; // chached value
+    size_t raw_minutes;
 
     // constructor made private because user might attempt to create an object
     // with wrong values for hours and minutes
@@ -67,16 +69,19 @@ public:
         this->minutes = minutes;
     }
 
-    auto operator<=>(const TimePoint &other) {
+    constexpr auto operator<=>(const TimePoint &other) {
         return raw_minutes <=> other.raw_minutes;
     }
+
+    constexpr auto hours() -> size_t { return hours; }
+    constexpr auto minutes() -> size_t { return minutes; }
 };
 
 struct TimeInterval {
     TimePoint begin;
     TimePoint end;
 
-    auto is_during_interval(TimePoint time) -> bool {
+    constexpr auto is_during_interval(TimePoint &time) -> bool {
         return time >= begin && time <= end;
     }
 };

@@ -14,9 +14,9 @@
 ```
  <data_input> ::= <tables> <time_period> <cost_per_hour> <events>
  <tables> ::= <number> '\n'
- <time_period> ::= <time> <time> '\n'
+ <time_period> ::= <time> <colon> <time> '\n'
  <cost_per_hour> ::= <number> '\n'
- <events> ::= <event> | <event> <events>
+ <events> ::= <event> | <event> <events> '\0'
  <event> ::= <time> <event_id> <event_body> '\n'
  <time> ::= <number>
  <event_id> ::= <number>
@@ -25,10 +25,8 @@
  <number> ::= <digit> | <digit> <number>
  <digit> ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
  <string> ::= <char> | <char> <string>
- <char> ::= <letter> | <digit> | <space> | <punctuation> | <symbol>
+ <char> ::= <letter> | <digit>
  <letter> ::= 'A' | 'B' | 'C' | ... | 'Z' | 'a' | 'b' | 'c' | ... | 'z'
  <space> ::= ' '
- <punctuation> ::= '.' | ',' | ';' | ':' | '!' | '?' | '-' | '_' | '"' | '''
- <symbol> ::= '@' | '#' | '$' | '%' | '^' | '&' | '*' | '(' | ')' | '+' |
-              '=' | '<' | '>' | '[' | ']' | '{' | '}' | '|' | '\' | '/'
+ <colon> ::= ':'
 ```
