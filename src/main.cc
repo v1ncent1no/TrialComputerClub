@@ -1,5 +1,4 @@
-﻿#include <compare>
-#include <iostream>
+﻿#include <iostream>
 #include <queue>
 #include <string>
 #include <vector>
@@ -69,19 +68,31 @@ public:
         this->minutes = minutes;
     }
 
-    constexpr auto operator<=>(const TimePoint &other) {
-        return raw_minutes <=> other.raw_minutes;
+    constexpr auto operator<=(const TimePoint &other) {
+        return raw_minutes <= other.raw_minutes;
+    }
+    constexpr auto operator>=(const TimePoint &other) {
+        return raw_minutes >= other.raw_minutes;
+    }
+    constexpr auto operator<(const TimePoint &other) {
+        return raw_minutes < other.raw_minutes;
+    }
+    constexpr auto operator>(const TimePoint &other) {
+        return raw_minutes > other.raw_minutes;
+    }
+    constexpr auto operator==(const TimePoint &other) {
+        return raw_minutes == other.raw_minutes;
     }
 
-    constexpr auto hours() -> size_t { return hours; }
-    constexpr auto minutes() -> size_t { return minutes; }
+    constexpr auto get_hours() -> size_t { return hours; }
+    constexpr auto get_minutes() -> size_t { return minutes; }
 };
 
 struct TimeInterval {
     TimePoint begin;
     TimePoint end;
 
-    constexpr auto is_during_interval(TimePoint &time) -> bool {
+    auto is_during_interval(TimePoint &time) -> bool {
         return time >= begin && time <= end;
     }
 };
