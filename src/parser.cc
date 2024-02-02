@@ -1,5 +1,6 @@
 #include "parser.h"
 
+#include <algorithm>
 #include <ctype.h>
 
 namespace parser {
@@ -11,7 +12,7 @@ namespace parser {
 // mess with external logic in some way
 auto Tokenizer::next(Token &token) -> bool {
     if (*source > 0) {
-        char ch = *source++;
+        const char ch = *source;
 
         switch (ch) {
         case ':':
@@ -33,7 +34,7 @@ auto Tokenizer::next(Token &token) -> bool {
                 this->read_chunk(token,
                                  [](char ch) -> bool { return isdigit(ch); });
             } else if (isalpha(ch)) {
-                token.type == tok_string;
+                token.type = tok_string;
                 this->read_chunk(token,
                                  [](char ch) -> bool { return isalnum(ch); });
             }
@@ -43,13 +44,15 @@ auto Tokenizer::next(Token &token) -> bool {
         return false;
     }
 
+    source++;
+
     return true;
 }
 
 auto Tokenizer::read_chunk(Token &token, bool (*condition)(char ch)) -> void {
-    const char *begin = source - 1;
+    const char *begin = source;
 
-    while (*source > 0 && condition(*source))
+    while (*source > 0 && condition(source[1]))
         source++;
 
     token.lexem = {begin, source};
