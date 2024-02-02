@@ -1,6 +1,5 @@
 #include "parser.h"
 
-#include <algorithm>
 #include <ctype.h>
 
 namespace parser {
@@ -11,10 +10,10 @@ namespace parser {
 // initialize the lexem part to {}, where we don't have any, so that it wouldn't
 // mess with external logic in some way
 auto Tokenizer::next(Token &token) -> bool {
-    if (*source > 0) {
-        const char ch = *source;
+    if (*src > 0) {
+        const char curr = *src;
 
-        switch (ch) {
+        switch (curr) {
         case ':':
             token.type = tok_colon;
             token.lexem = {};
@@ -29,11 +28,12 @@ auto Tokenizer::next(Token &token) -> bool {
             token.lexem = {};
             break;
         default:
-            if (isdigit(ch)) {
+            if (isdigit(curr)) {
                 token.type = tok_number;
-                this->read_chunk(token,
-                                 [](char ch) -> bool { return isdigit(ch); });
-            } else if (isalpha(ch)) {
+                this->read_chunk(token, [](char ch) -> bool {
+                    return isdigit(ch) || ch == '_' || ch == '-';
+                });
+            } else if (isalpha(curr)) {
                 token.type = tok_string;
                 this->read_chunk(token,
                                  [](char ch) -> bool { return isalnum(ch); });
@@ -44,17 +44,19 @@ auto Tokenizer::next(Token &token) -> bool {
         return false;
     }
 
-    source++;
+    src++;
 
     return true;
 }
 
 auto Tokenizer::read_chunk(Token &token, bool (*condition)(char ch)) -> void {
-    const char *begin = source;
+    const char *begin = src;
 
-    while (*source > 0 && condition(source[1]))
-        source++;
+    // take next character if it's not eof, '\0', or if it satisfies `condition`
+    // TODO: justify why pointer arithmetic is used instead of std::count_if
+    while (*src > 0 && condition(src[1]))
+        src++;
 
-    token.lexem = {begin, source};
+    token.lexem = {begin, src};
 }
 } // namespace parser

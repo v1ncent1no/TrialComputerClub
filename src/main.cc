@@ -17,6 +17,8 @@
 
 #include "timeutil.h"
 
+typedef unsigned int uint;
+
 #define _STRINGIFY(x) #x
 #define STRINGIFY(x) _STRINGIFY(x)
 
@@ -40,6 +42,41 @@ class Table {
 public:
 };
 
+// TODO: Implememta a binary that keeps income and outcome events sorted by time
+// point
+enum EventType {
+    event_client_came,
+    event_client_takes_seat,
+    event_client_leaves,
+};
+
+struct Event {
+    TimePoint time;
+    EventType type;
+    std::string_view client_name;
+
+    std::optional<int> table_index;
+};
+
+class IOEvents {
+    Event value;
+
+    IOEvents *earlier;
+    IOEvents *further;
+
+public:
+};
+
+class State {
+    uint table_count;
+    TimeInterval work_hours;
+    double cost_per_hour;
+
+    IOEvents events;
+
+public:
+};
+
 auto main(int argc, char **argv) -> int {
     std::vector<Table> tables(10);
 
@@ -49,6 +86,7 @@ auto main(int argc, char **argv) -> int {
     }
 
     std::ifstream file{argv[1], std::ios::in};
+    // Check the lexer for correctness
 
     return 0;
 }

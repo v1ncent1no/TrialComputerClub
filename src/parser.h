@@ -52,14 +52,19 @@ struct TokenizerMetadata {
 };
 
 class Tokenizer {
-    const char *source;
+    // The source string must be owned by the Tokenizer in order to ensure
+    // memory safety
+    std::string source;
+
+    const char *src;
     TokenizerMetadata metadata; // TODO: use metadata for gracefull error outout
 
     auto read_chunk(Token &token, bool (*condition)(char ch)) -> void;
 
 public:
-    Tokenizer(const char *source)
-        : source(source), metadata{.line = 0, .character = 0} {}
+    Tokenizer(std::string &&source)
+        : source(source), src(source.c_str()),
+          metadata{.line = 0, .character = 0} {}
 
     auto next(Token &token) -> bool;
 };

@@ -1,3 +1,17 @@
+# Computer Club
+
+TODO
+
+# Task
+
+TODO
+
+# Desgin Choices
+
+TODO
+
+# Implementation Details
+
 ## Input Data Format:
 ```
   <number of tables in the computer club>
@@ -20,7 +34,7 @@
  <event> ::= <time> <event_id> <event_body> '\n'
  <time> ::= <number>
  <event_id> ::= <number>
- <event_body> ::= <string>
+ <event_body> ::= <string> <number> <string> '\n' | <string> <number> <string> <number> '\n'
 
  <number> ::= <digit> | <digit> <number>
  <digit> ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
