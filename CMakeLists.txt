@@ -6,7 +6,7 @@ if (POLICY CMP0141)
 endif()
 
 project ("TrialComputerClub")
-add_executable (TrialComputerClub "src/main.cc"  "src/parser.cc" "src/parser.h")
+add_executable (TrialComputerClub "src/main.cc"  "src/parser.cc" "src/parser.h" "src/timeutil.cc" "src/timeutil.h")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET TrialComputerClub PROPERTY CXX_STANDARD 20)

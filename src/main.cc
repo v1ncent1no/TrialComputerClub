@@ -1,11 +1,11 @@
-﻿#include <iostream>
+﻿#include <fstream>
+#include <iostream>
+
 #include <queue>
 #include <string>
 #include <vector>
 
-#include <algorithm>
-
-#include <fstream>
+#include <chrono>
 
 #if defined(__unix__)
 #include <sysexits.h>
@@ -15,7 +15,7 @@
 #define EX_IOERR 74   /* input/output error */
 #endif
 
-#include <chrono>
+#include "timeutil.h"
 
 #define _STRINGIFY(x) #x
 #define STRINGIFY(x) _STRINGIFY(x)
@@ -33,70 +33,6 @@ const char *error_str[] = {
     "ClientUnknown",   "ICanWaitNoLonger!",
 };
 
-struct TimePointWrongFormat : public std::runtime_error {
-    TimePointWrongFormat(const std::string &msg) : std::runtime_error(msg) {}
-};
-
-// created my own time point class to simplify the logic, otherwise, using
-// `<chrono>` types would loook messy
-class TimePoint {
-    size_t hours, minutes;
-    size_t raw_minutes;
-
-    // constructor made private because user might attempt to create an object
-    // with wrong values for hours and minutes
-    TimePoint(size_t hours, size_t minutes)
-        : raw_minutes(hours * 60 + minutes), hours(hours), minutes(minutes) {}
-
-public:
-    static auto create(size_t hours, size_t minutes) -> TimePoint {
-        if (hours >= 60 || minutes >= 60) {
-            throw TimePointWrongFormat(
-                std::format("supplied time point fomat is wrong"));
-        }
-
-        return TimePoint(hours, minutes);
-    }
-
-    auto reset(size_t hours, size_t minutes) -> void {
-        if (hours >= 60 || minutes >= 60) {
-            throw TimePointWrongFormat(
-                std::format("supplied time point fomat is wrong"));
-        }
-
-        this->hours = hours;
-        this->minutes = minutes;
-    }
-
-    constexpr auto operator<=(const TimePoint &other) {
-        return raw_minutes <= other.raw_minutes;
-    }
-    constexpr auto operator>=(const TimePoint &other) {
-        return raw_minutes >= other.raw_minutes;
-    }
-    constexpr auto operator<(const TimePoint &other) {
-        return raw_minutes < other.raw_minutes;
-    }
-    constexpr auto operator>(const TimePoint &other) {
-        return raw_minutes > other.raw_minutes;
-    }
-    constexpr auto operator==(const TimePoint &other) {
-        return raw_minutes == other.raw_minutes;
-    }
-
-    constexpr auto get_hours() -> size_t { return hours; }
-    constexpr auto get_minutes() -> size_t { return minutes; }
-};
-
-struct TimeInterval {
-    TimePoint begin;
-    TimePoint end;
-
-    auto is_during_interval(TimePoint &time) -> bool {
-        return time >= begin && time <= end;
-    }
-};
-
 class Table {
     size_t id;
     std::queue<std::string> client_queue;
@@ -105,8 +41,7 @@ public:
 };
 
 auto main(int argc, char **argv) -> int {
-    std::vector<Table> tables;
-    // TimeInterval openDuration;
+    std::vector<Table> tables(10);
 
     if (argc < 2) {
         fprintf(stderr, "USAGE:\n%s [file name]\n", argv[0]);
