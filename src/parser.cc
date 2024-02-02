@@ -3,12 +3,10 @@
 #include <ctype.h>
 
 namespace parser {
-// TODO: rewrite the explanation in the morning after you wake you
-//
-// Tokenizer::next was design with idea that it could be used as lazy iterator
-// which might even reuse the same memory of one Token. This is why why
-// initialize the lexem part to {}, where we don't have any, so that it wouldn't
-// mess with external logic in some way
+// Tokenizer::next was designed for it to be used as lazy iterator which might
+// reuse the same memory of one Token. This is why it initializes the lexem part
+// to {}, where we don't need to keep ot, so that it wouldn't mess up external
+// logic in some way
 auto Tokenizer::next(Token &token) -> bool {
     if (*src > 0) {
         const char curr = *src;
