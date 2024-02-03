@@ -57,15 +57,11 @@ class Tokenizer {
     std::string source;
 
     const char *src;
-    // TODO: use metadata for gracefull error outout and exit
-    TokenizerMetadata metadata;
 
     auto read_chunk(Token &token, bool (*condition)(char ch)) -> void;
 
 public:
-    Tokenizer(std::string &&source)
-        : source(source), src(source.c_str()),
-          metadata{.line = 0, .character = 0} {}
+    Tokenizer(std::string &&source) : source(source), src(source.c_str()) {}
 
     auto next(Token &token) -> bool;
 };

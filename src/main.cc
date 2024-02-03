@@ -78,7 +78,7 @@ public:
 };
 
 auto main(int argc, char **argv) -> int {
-    std::vector<Table> tables(10);
+    std::vector<Table> tables{};
 
     if (argc < 2) {
         fprintf(stderr, "USAGE:\n%s [file name]\n", argv[0]);
